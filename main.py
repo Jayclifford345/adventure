@@ -210,12 +210,14 @@ class AdventureGame:
 
     def list_actions(self):
         actions = self.locations[self.current_location].get("actions", {}).keys()
-        return f"Available actions: {', '.join(actions)}"
+        return f"Available actions: {', '.join(actions)}, look around"
 
     def process_command(self, command):
         if command.lower() in ["quit", "exit"]:
             self.game_active = False
             return "You have ended your adventure."
+        elif command.lower() in ['look around', 'here']:
+            return self.here()
         elif command.lower() == "list actions":
             return self.list_actions()
         
@@ -240,10 +242,13 @@ class AdventureGame:
         else:
             return "I don't understand that command."
 
+    def here(self):
+        print(f"{self.locations[self.current_location]['description']}\n{self.list_actions()}")
+
     def play(self):
         print("Welcome to your text adventure! Type 'quit' to exit.")
         logging.info("play: Welcome to your text adventure! Type 'quit' to exit.")
-        print(f"{self.locations[self.current_location]['description']}\n{self.list_actions()}")
+        self.here()
         while self.game_active:
             command = input(">>> ")
             response = self.process_command(command)
